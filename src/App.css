@@ -1,0 +1,114 @@
+.homePageWrapper {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  margin: auto;
+  position: fixed;
+}
+
+.formWrapper {
+  background-color: rgba(45, 40, 62, 0.9);
+  padding: 10px;
+  border-radius: 50px;
+  height: 75%;
+  width: 400px;
+  /* max-width: 90%; */
+  margin-top: 10px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.homePageLogo {
+  height: 90px;
+  display: flex;
+  margin-top: 20px;
+  margin-left: 60px;
+  margin-bottom: 30px;
+}
+.inputicon {
+  display: flex;
+  padding-left: 0px;
+  left: 0px;
+  top: 25px;
+  font-size: 25px;
+  align-items: center;
+  justify-content: center;
+  width: 60%;
+  height: 100%;
+  position: relative;
+}
+.inputBox {
+  padding: 10px;
+  border-radius: 15px;
+  border: 1px solid #fff;
+  background-color: transparent;
+  margin-bottom: 20px;
+  color: #fff;
+  font-size: 15px;
+  width: 175px;
+  margin-left: 100px;
+  padding-left: 40px;
+}
+
+.btn {
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  margin-top: 30px;
+  color: #fff;
+}
+
+.joinBtn {
+  font-size: 16px;
+  background: linear-gradient(120deg, #ff585a 20%, #5b54ac 30%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 30px;
+  margin-left: 40%;
+  border-radius: 10px;
+}
+
+.joinBtn:hover {
+  background: linear-gradient(45deg, #ff585a 20%, #8a83d2 30%);
+}
+
+.createInfo {
+  margin: 0 auto;
+  margin-top: 40px;
+}
+
+.createNewBtn {
+  background: linear-gradient(120deg, #ff585a 20%, #5b54ac 30%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 30px;
+  margin-left: 40%;
+  border-radius: 10px;
+}
+.createNewBtn:hover {
+  background: linear-gradient(45deg, #ff585a 20%, #8a83d2 30%);
+}
+.CodeMirror {
+  height: 340px !important;
+  color: #fff;
+}
+
+.CodeMirror-gutters {
+  background: #1d1e22 !important;
+}
+
+.CodeMirror-scroll {
+  background: #1d1e22;
+}
