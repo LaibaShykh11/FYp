@@ -18,7 +18,7 @@ const Home = () => {
       toast.error('ROOM Id & Username is required')
       return
     }
-    navigate(`/Mainpage/${roomId}`, { state: { username } })
+    navigate(`/MainPage/${roomId}`, { state: { username } })
   }
   return (
     <div
