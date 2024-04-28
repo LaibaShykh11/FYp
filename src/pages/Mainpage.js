@@ -61,7 +61,7 @@ const MainPage = () => {
           }
           setParticipants(participants)
           socketRef.current.emit(ACTIONS.SYNC_CODE, {
-            value: codeRef.current,
+            code: codeRef.current,
             socketId,
           })
         }
@@ -217,8 +217,8 @@ const MainPage = () => {
       <Editor
         socketRef={socketRef}
         roomId={roomId}
-        onCodeChange={(value) => {
-          codeRef.current = value
+        onCodeChange={(code) => {
+          codeRef.current = code
         }}
       />
     </div>

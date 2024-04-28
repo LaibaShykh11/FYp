@@ -26,9 +26,7 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
     setJs(value)
   }
   useEffect(() => {
-    if (editorRef.current) {
-      updateOutput()
-    }
+    editorRef.current = updateOutput()
   }, [html, css, js])
 
   useEffect(() => {
@@ -119,7 +117,7 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
               </div>
               <div className='w-full px-2 overflow-x-auto '>
                 <CodeMirror
-                  ref={editorRef}
+                  ref={editorRef.current}
                   value={html}
                   height='600px'
                   theme='dark'
@@ -139,7 +137,7 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
                 </div>
                 <div className='w-full px-2 overflow-x-auto'>
                   <CodeMirror
-                    ref={editorRef}
+                    ref={editorRef.current}
                     value={css}
                     height='600px'
                     theme='dark'
@@ -158,7 +156,7 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
                 </div>
                 <div className='w-full px-2 overflow-x-auto'>
                   <CodeMirror
-                    ref={editorRef}
+                    ref={editorRef.current}
                     value={js}
                     height='600px'
                     theme='dark'
