@@ -9,13 +9,14 @@ import Feature3 from './Feature3'
 import Feature4 from './Feature4'
 import Feature5 from './Feature5'
 import Footer from './Footer'
+import MainInterface from './MainInterface'
 
 function Firstpage() {
   return (
     <div>
       <Header />
       <Hero />
-      <Interview />
+      <MainInterface />
       <Brands />
       {/* <div className='h-[4000px]'></div> */}
       <Feature1 />

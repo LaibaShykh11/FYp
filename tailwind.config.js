@@ -35,7 +35,9 @@ module.exports = {
         accentHover: '#e05216',
         grey: '#F5F5F5',
         blue: '#6610f2',
+        red: '#dc2626',
         purple: '#16213e',
+        darkred: '#991b1b',
       },
       backgroundImage: {
         overview: "url('/src/assets/img/bg.jpg')",

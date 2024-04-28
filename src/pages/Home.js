@@ -20,6 +20,12 @@ const Home = () => {
     }
     navigate(`/MainPage/${roomId}`, { state: { username } })
   }
+  const handleInputEnter = (e) => {
+    console.log('event', e.code)
+    if (e.code === 'Enter') {
+      joinRoom()
+    }
+  }
   return (
     <div
       className='homePageWrapper container-fluid'
@@ -56,6 +62,7 @@ const Home = () => {
             placeholder='ROOM ID'
             onChange={(e) => setRoomId(e.target.value)}
             value={roomId}
+            onKeyUp={handleInputEnter}
           />
 
           <div className='inputicon'>
@@ -77,6 +84,7 @@ const Home = () => {
             placeholder='USERNAME'
             onChange={(e) => setUsername(e.target.value)}
             value={username}
+            onKeyUp={handleInputEnter}
           />
 
           <button onClick={joinRoom} className='btn joinBtn'>

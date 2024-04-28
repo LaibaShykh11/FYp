@@ -16,7 +16,7 @@ function Feature2() {
         data-aos='fade-left'
         data-aos-offset='300'
       >
-        <img className='h-[20rem]' src={image} alt='' />
+        <img className='h-[20rem] rounded-lg shadow-md' src={image} alt='' />
       </div>
     </section>
   )

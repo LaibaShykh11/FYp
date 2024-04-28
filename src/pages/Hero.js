@@ -43,14 +43,16 @@ function Hero() {
             data-aos='fade-down'
             data-aos-delay='700'
           >
-            <button
-              className='hover:animate-bounce rounded-full text-white lg:btn-md bg-blue flex justify-center items-center mb-2 '
-              data-aos='fade-up'
-              data-aos-delay='800'
-            >
-              <AiOutlinePlusCircle className='mr-2' />
-              {btnText}
-            </button>
+            <a href='/Home'>
+              <button
+                className='hover:animate-bounce rounded-full text-white lg:btn-md bg-blue flex justify-center items-center mb-2 '
+                data-aos='fade-up'
+                data-aos-delay='800'
+              >
+                <AiOutlinePlusCircle className='mr-2' />
+                {btnText}
+              </button>
+            </a>
             <span className='lg:lead font-sans text-light mt-3 lg:mb-0'>
               {compText}
             </span>

@@ -52,6 +52,11 @@
     @apply text-accent text-xl lg:text-2xl;
   }
 }
-/* 
 
-*/
+.btn {
+  padding: 10px 20px; /* Adjust padding as needed */
+}
+
+.btn-block {
+  width: 100%;
+}

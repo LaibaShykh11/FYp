@@ -7,7 +7,8 @@ import Feature1Img from '../src/assets/img/Feature1Img.jpeg'
 import Feature2Img from '../src/assets/img/Feature2Img.png'
 import Feature3Img from '../src/assets/img/Feature3Img.png'
 import Feature4Img from '../src/assets/img/Feature4Img.jpg'
-import Feature5Img from '../src/assets/img/Feature5Img.jpg'
+import Feature5Img from '../src/assets/img/Feature5Img.jpeg'
+import mainInterface from '../src/assets/img/mainInterface.jpeg'
 
 export const header = {
   btnText1: 'New File',
@@ -82,5 +83,10 @@ export const features = {
     title: 'Real Time Chatting.',
     subtitle: 'You can chat with other participants at the real time.',
     image: Feature5Img,
+  },
+  mainInterface: {
+    title: 'CodeCollab Interface',
+    subtitle: 'Real Time Collaboration Platform',
+    image: mainInterface,
   },
 }
