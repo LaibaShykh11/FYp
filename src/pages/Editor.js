@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useState, useEffect, useRef } from 'react'
 import SplitPane from 'react-split-pane'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCss3, faHtml5, faJs } from '@fortawesome/free-brands-svg-icons'
-import CodeMirror from '@uiw/react-codemirror'
+import CodeMirror, { useCodeMirror } from '@uiw/react-codemirror'
 import { javascript } from '@codemirror/lang-javascript'
 import ACTIONS from '../Actions'
 
@@ -14,57 +14,67 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
   const [output, setOutput] = useState('')
   const editorRef = useRef(null)
 
-  const onHtmlChange = (value, viewUpdate) => {
+  const onHtmlChange = useCallback((value, changes) => {
     setHtml(value)
-  }
-
-  const onCssChange = (value, viewUpdate) => {
+    const { origin } = changes
+    const getValue = () => {
+      return editorRef.current ? editorRef.current.getValue() : ''
+    }
+    const code = getValue(value)
+    onCodeChange(code)
+    if (origin !== 'setValue') {
+      socketRef.current.emit(ACTIONS.CODE_CHANGE, {
+        roomId,
+        code: { html, css, js },
+      })
+    }
+  })
+  const onCssChange = useCallback((value, changes) => {
     setCss(value)
-  }
+    const { origin } = changes
+    const getValue = () => {
+      return editorRef.current ? editorRef.current.getValue() : ''
+    }
+    const code = getValue(value)
+    onCodeChange(code)
+    if (origin !== 'setValue') {
+      socketRef.current.emit(ACTIONS.CODE_CHANGE, {
+        roomId,
+        code: { html, css, js },
+      })
+    }
+  })
 
-  const onJsChange = (value, viewUpdate) => {
+  const onJsChange = useCallback((value, changes) => {
     setJs(value)
-  }
+    const { origin } = changes
+    const getValue = () => {
+      return editorRef.current ? editorRef.current.getValue() : ''
+    }
+    const code = getValue(value)
+    onCodeChange(code)
+    if (origin !== 'setValue') {
+      socketRef.current.emit(ACTIONS.CODE_CHANGE, {
+        roomId,
+        code: { html, css, js },
+      })
+    }
+  })
+  const { setContainer } = useCodeMirror({
+    container: editorRef.current,
+    extensions: [javascript({ jsx: true })],
+    value: `${html}\n${css}\n${js}`,
+  })
+
   useEffect(() => {
-    editorRef.current = updateOutput()
-  }, [html, css, js])
+    if (editorRef.current) {
+      setContainer(editorRef.current)
+    }
+  }, [editorRef.current])
 
   useEffect(() => {
     updateOutput()
-  }, [])
-
-  useEffect(() => {
-    async function init() {
-      editorRef.current.on('change', (instance, changes) => {
-        //console.log('changes', changes)
-        const { origin } = changes
-        // Handle change event here
-        const code = instance.getValue()
-        switch (instance.getOption('code')) {
-          case 'html':
-            onHtmlChange(code)
-            break
-          case 'css':
-            onCssChange(code)
-            break
-          case 'javascript':
-            onJsChange(code)
-            break
-          default:
-            break
-        }
-        onCodeChange(code)
-        if (origin !== 'setValue') {
-          socketRef.current.emit(ACTIONS.CODE_CHANGE, {
-            roomId,
-            code: { html, css, js },
-          })
-        }
-      })
-
-      init()
-    }
-  }, [])
+  }, [html, css, js])
 
   useEffect(() => {
     if (socketRef.current) {
@@ -75,6 +85,9 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
           setJs(code.js)
         }
       })
+    }
+    return () => {
+      socketRef.current.off(ACTIONS.CODE_CHANGE)
     }
   }, [socketRef.current])
 
@@ -117,7 +130,7 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
               </div>
               <div className='w-full px-2 overflow-x-auto '>
                 <CodeMirror
-                  ref={editorRef.current}
+                  //ref={editorRef}
                   value={html}
                   height='600px'
                   theme='dark'
@@ -137,7 +150,7 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
                 </div>
                 <div className='w-full px-2 overflow-x-auto'>
                   <CodeMirror
-                    ref={editorRef.current}
+                    // ref={editorRef}
                     value={css}
                     height='600px'
                     theme='dark'
@@ -156,7 +169,7 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
                 </div>
                 <div className='w-full px-2 overflow-x-auto'>
                   <CodeMirror
-                    ref={editorRef.current}
+                    // ref={editorRef}
                     value={js}
                     height='600px'
                     theme='dark'

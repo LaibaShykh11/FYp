@@ -42,13 +42,23 @@ io.on('connection', (socket) => {
     })
   })
 
-  socket.on(ACTIONS.CODE_CHANGE, ({ roomId, value }) => {
-    io.to(roomId).emit(ACTIONS.CODE_CHANGE, { value })
+  socket.on(ACTIONS.CODE_CHANGE, ({ roomId, code }) => {
+    socket.in(roomId).emit(ACTIONS.CODE_CHANGE, { code })
+  })
+  socket.on(ACTIONS.TITLE_CHANGE, ({ roomId, title }) => {
+    io.in(roomId).emit(ACTIONS.TITLE_CHANGE, { title })
   })
 
-  // socket.on(ACTIONS.SYNC_CODE, ({ socketId, code }) => {
-  //   io.to(socketId).emit(ACTIONS.CODE_CHANGE, { code })
-  // })
+  socket.on(ACTIONS.SEND_MESSAGE, ({ text }) => {
+    const username = userSocketMap[socket.id]
+    io.to(socket.rooms[0]).emit(ACTIONS.RECIEVE_MESSAGE, {
+      sender: username,
+      text: text,
+    })
+  })
+  socket.on(ACTIONS.SYNC_CODE, ({ socketId, code }) => {
+    io.to(socketId).emit(ACTIONS.CODE_CHANGE, { code })
+  })
 
   socket.on('disconnecting', () => {
     const rooms = [...socket.rooms]

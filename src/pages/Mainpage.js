@@ -21,6 +21,7 @@ import Editor from './Editor'
 
 const MainPage = () => {
   const [title, setTitle] = useState('Untitled')
+  const [chatMessages, setChatMessages] = useState([])
   const [isTitle, setisTitle] = useState('')
   const [showParticipants, setShowParticipants] = useState(false)
   const [showChat, setShowChat] = useState(false)
@@ -49,6 +50,7 @@ const MainPage = () => {
       socketRef.current.emit(ACTIONS.JOIN, {
         roomId,
         username: location.state?.username,
+        title: title,
       })
 
       // Listening for joined event
@@ -66,7 +68,14 @@ const MainPage = () => {
           })
         }
       )
-
+      // Listening for title change
+      socketRef.current.on(ACTIONS.TITLE_CHANGE, ({ title }) => {
+        setTitle(title)
+      })
+      // Listening for chat
+      socketRef.current.on(ACTIONS.RECIEVE_MESSAGE, ({ sender, text }) => {
+        setChatMessages((prevMessages) => [...prevMessages, { sender, text }])
+      })
       // Listening for disconnected
       socketRef.current.on(ACTIONS.DISCONNECTED, ({ socketId, username }) => {
         toast.success(`${username} left the room.`)
@@ -80,13 +89,17 @@ const MainPage = () => {
       socketRef.current.disconnect()
       socketRef.current.off(ACTIONS.JOINED)
       socketRef.current.off(ACTIONS.DISCONNECTED)
+      socketRef.current.off(ACTIONS.RECIEVE_MESSAGE)
     }
   }, [])
 
   if (!location.state) {
     return <Navigate to='/' />
   }
-
+  const handleTitleChange = (title) => {
+    setTitle(title)
+    socketRef.current.emit(ACTIONS.TITLE_CHANGE, { roomId, title: title }) // Send new title to server
+  }
   return (
     <div className='w-screen h-screen flex flex-col items-start justify-start overflow-hidden'>
       {/* alert section */}
@@ -106,7 +119,7 @@ const MainPage = () => {
                     type='text'
                     placeholder='Your Title'
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) => handleTitleChange(e.target.value)}
                   />
                 </>
               ) : (
@@ -163,6 +176,10 @@ const MainPage = () => {
             />
             {showChat && (
               <Chat
+                socketRef={socketRef}
+                participants={participants}
+                chatMessages={chatMessages}
+                setChatMessages={setChatMessages}
                 onClose={() => {
                   setShowChat(false)
                 }}
@@ -192,6 +209,7 @@ const MainPage = () => {
             />
             {showShare && (
               <Share
+                roomId={roomId}
                 onClose={() => {
                   setShowShare(false)
                 }}

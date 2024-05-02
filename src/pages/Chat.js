@@ -5,9 +5,15 @@ import {
   faPaperPlane,
   faSmile,
 } from '@fortawesome/free-solid-svg-icons'
+import ACTIONS from '../Actions'
 
-const Chat = ({ onClose }) => {
-  const [messages, setMessages] = useState([])
+const Chat = ({
+  onClose,
+  socketRef,
+  chatMessages,
+  participants,
+  setChatMessages,
+}) => {
   const [inputMessage, setInputMessage] = useState('')
   const messagesEndRef = useRef(null)
 
@@ -17,16 +23,23 @@ const Chat = ({ onClose }) => {
 
   useEffect(() => {
     scrollToBottom()
-  }, [messages])
+  }, [chatMessages])
+
+  const sender =
+    participants.find(
+      (participant) => participant.socketId === socketRef.current.id
+    )?.username || 'You'
 
   const handleMessageSend = () => {
     if (inputMessage.trim() === '') return
-    setMessages([...messages, { sender: 'You', text: inputMessage }])
+    const message = { sender, text: inputMessage }
+    socketRef.current.emit(ACTIONS.SEND_MESSAGE, message) // Emit message to the server
+    setChatMessages([...chatMessages, message]) // Update local chatMessages state
     setInputMessage('')
   }
 
   const handleEmojiSelect = (emoji) => {
-    setInputMessage(inputMessage + emoji.native)
+    setInputMessage((prevMessage) => prevMessage + emoji.native)
   }
 
   return (
@@ -35,7 +48,7 @@ const Chat = ({ onClose }) => {
       <div className='relative bg-white rounded-xl px-10 py-10 w-96'>
         <h1 className='font-bold text-2xl text-center text-black'>Chat</h1>
         <div className='h-72 overflow-y-auto bg-white p-2 rounded-lg'>
-          {messages.map((message, index) => (
+          {chatMessages.map((message, index) => (
             <div key={index} className='mb-2'>
               <div className='font-bold'>{message.sender}</div>
               <div>{message.text}</div>
