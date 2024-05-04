@@ -10,6 +10,7 @@ import {
   faShare,
   faUserFriends,
   faSignOut,
+  faShareAlt,
 } from '@fortawesome/free-solid-svg-icons'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -28,7 +29,7 @@ const MainPage = () => {
   const [showShare, setShowShare] = useState(false)
   const [showLeave, setShowLeave] = useState(false)
   const [participants, setParticipants] = useState([])
-  //socket
+
   const socketRef = useRef(null)
   const codeRef = useRef(null)
   const location = useLocation()
@@ -37,16 +38,19 @@ const MainPage = () => {
 
   useEffect(() => {
     const init = async () => {
+      //Initialize socket connection
       socketRef.current = await initSocket()
       socketRef.current.on('connect_error', (err) => handleErrors(err))
       socketRef.current.on('connect_failed', (err) => handleErrors(err))
 
+      // Error handling for socket connection
       function handleErrors(e) {
         console.log('socket error', e)
         toast.error('Socket connection failed, try again later.')
         reactNavigator('/')
       }
 
+      // Join the room
       socketRef.current.emit(ACTIONS.JOIN, {
         roomId,
         username: location.state?.username,
@@ -68,15 +72,17 @@ const MainPage = () => {
           })
         }
       )
-      // Listening for title change
+      // Listening for title change event
       socketRef.current.on(ACTIONS.TITLE_CHANGE, ({ title }) => {
         setTitle(title)
       })
-      // Listening for chat
+
+      // Listening for chat event
       socketRef.current.on(ACTIONS.RECIEVE_MESSAGE, ({ sender, text }) => {
         setChatMessages((prevMessages) => [...prevMessages, { sender, text }])
       })
-      // Listening for disconnected
+
+      // Listening for disconnected event
       socketRef.current.on(ACTIONS.DISCONNECTED, ({ socketId, username }) => {
         toast.success(`${username} left the room.`)
         setParticipants((prev) => {
@@ -85,6 +91,7 @@ const MainPage = () => {
       })
     }
     init()
+    // Clean up on unmount
     return () => {
       socketRef.current.disconnect()
       socketRef.current.off(ACTIONS.JOINED)
@@ -96,15 +103,16 @@ const MainPage = () => {
   if (!location.state) {
     return <Navigate to='/' />
   }
+
+  // Function to handle title change
   const handleTitleChange = (title) => {
     setTitle(title)
-    socketRef.current.emit(ACTIONS.TITLE_CHANGE, { roomId, title: title }) // Send new title to server
+    socketRef.current.emit(ACTIONS.TITLE_CHANGE, { roomId, title: title })
   }
   return (
-    <div className='w-screen h-screen flex flex-col items-start justify-start overflow-hidden'>
-      {/* alert section */}
+    <div className='w-screen h-screen flex flex-col items-start justify-start overflow-hidden bg-black'>
       {/* header section */}
-      <header className='w-full flex items-center justify-between px-6'>
+      <header className='w-full flex items-center justify-between px-6 '>
         <div className='flex items-center justify-center gap-3'>
           {/* Logo */}
           <img className='w-15 h-12 pt-1 object-contain' src='/logo3.png' />
@@ -168,6 +176,7 @@ const MainPage = () => {
           </div>
         </div>
         <div className='flex items-center justify-end gap-6 pr-8'>
+          {/*Chat*/}
           <div>
             <FontAwesomeIcon
               className='text-white text-xl'
@@ -186,6 +195,7 @@ const MainPage = () => {
               />
             )}
           </div>
+          {/*Participants*/}
           <div>
             <FontAwesomeIcon
               className='text-white text-xl'
@@ -201,10 +211,11 @@ const MainPage = () => {
               />
             )}
           </div>
+          {/*Copy Room Id*/}
           <div>
             <FontAwesomeIcon
               className='text-white text-xl'
-              icon={faShare}
+              icon={faShareAlt}
               onClick={() => setShowShare(true)}
             />
             {showShare && (
@@ -216,6 +227,7 @@ const MainPage = () => {
               />
             )}
           </div>
+          {/*Leave Room*/}
           <div>
             <FontAwesomeIcon
               className='text-white text-xl'
@@ -232,6 +244,7 @@ const MainPage = () => {
           </div>
         </div>
       </header>
+      {/*Editor*/}
       <Editor
         socketRef={socketRef}
         roomId={roomId}

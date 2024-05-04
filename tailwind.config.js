@@ -38,6 +38,7 @@ module.exports = {
         red: '#dc2626',
         purple: '#16213e',
         darkred: '#991b1b',
+        lightblue: '#add8e6',
       },
       backgroundImage: {
         overview: "url('/src/assets/img/bg.jpg')",

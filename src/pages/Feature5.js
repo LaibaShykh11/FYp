@@ -7,11 +7,7 @@ function Feature5() {
 
   return (
     <section className='section flex flex-col lg:flex-row p-36 justify-evenly'>
-      <div
-        className='flex'
-        // data-aos='fade-right'
-        // data-aos-offset='300'
-      >
+      <div className='flex' data-aos='fade-right' data-aos-offset='300'>
         <img className='h-[30rem]' src={image} alt='' />
       </div>
       <div className='flex lg:flex-col gap-y-8 lg:gap-y-0  pl-6 item-center'>

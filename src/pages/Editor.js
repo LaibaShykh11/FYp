@@ -8,58 +8,62 @@ import { javascript } from '@codemirror/lang-javascript'
 import ACTIONS from '../Actions'
 
 const Editor = ({ socketRef, roomId, onCodeChange }) => {
+  // States for HTML, CSS, JS, and combined output
   const [html, setHtml] = useState('')
   const [css, setCss] = useState('')
   const [js, setJs] = useState('')
   const [output, setOutput] = useState('')
   const editorRef = useRef(null)
 
-  const onHtmlChange = useCallback((value, changes) => {
-    setHtml(value)
-    const { origin } = changes
-    const getValue = () => {
-      return editorRef.current ? editorRef.current.getValue() : ''
-    }
-    const code = getValue(value)
-    onCodeChange(code)
-    if (origin !== 'setValue') {
-      socketRef.current.emit(ACTIONS.CODE_CHANGE, {
-        roomId,
-        code: { html, css, js },
-      })
-    }
-  })
-  const onCssChange = useCallback((value, changes) => {
-    setCss(value)
-    const { origin } = changes
-    const getValue = () => {
-      return editorRef.current ? editorRef.current.getValue() : ''
-    }
-    const code = getValue(value)
-    onCodeChange(code)
-    if (origin !== 'setValue') {
-      socketRef.current.emit(ACTIONS.CODE_CHANGE, {
-        roomId,
-        code: { html, css, js },
-      })
-    }
-  })
+  // Callback functions for CodeMirror onChange events
+  const onHtmlChange = useCallback(
+    (value, changes) => {
+      setHtml(value)
+      const { origin } = changes
+      const code = editorRef.current ? editorRef.current.getValue() : ''
+      onCodeChange(code)
+      if (origin !== 'setValue') {
+        socketRef.current.emit(ACTIONS.CODE_CHANGE, {
+          roomId,
+          code: { html, css, js },
+        })
+      }
+    },
+    [html, css, js, roomId]
+  )
+  const onCssChange = useCallback(
+    (value, changes) => {
+      setCss(value)
+      const { origin } = changes
+      const code = editorRef.current ? editorRef.current.getValue() : ''
+      onCodeChange(code)
+      if (origin !== 'setValue') {
+        socketRef.current.emit(ACTIONS.CODE_CHANGE, {
+          roomId,
+          code: { html, css, js },
+        })
+      }
+    },
+    [html, css, js, roomId]
+  )
 
-  const onJsChange = useCallback((value, changes) => {
-    setJs(value)
-    const { origin } = changes
-    const getValue = () => {
-      return editorRef.current ? editorRef.current.getValue() : ''
-    }
-    const code = getValue(value)
-    onCodeChange(code)
-    if (origin !== 'setValue') {
-      socketRef.current.emit(ACTIONS.CODE_CHANGE, {
-        roomId,
-        code: { html, css, js },
-      })
-    }
-  })
+  const onJsChange = useCallback(
+    (value, changes) => {
+      setJs(value)
+      const { origin } = changes
+      const code = editorRef.current ? editorRef.current.getValue() : ''
+      onCodeChange(code)
+      if (origin !== 'setValue') {
+        socketRef.current.emit(ACTIONS.CODE_CHANGE, {
+          roomId,
+          code: { html, css, js },
+        })
+      }
+    },
+    [html, css, js, roomId]
+  )
+
+  // Setup CodeMirror with hook and initial values
   const { setContainer } = useCodeMirror({
     container: editorRef.current,
     extensions: [javascript({ jsx: true })],
@@ -72,6 +76,7 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
     }
   }, [editorRef.current])
 
+  // Update output HTML when HTML, CSS, or JS changes
   useEffect(() => {
     updateOutput()
   }, [html, css, js])

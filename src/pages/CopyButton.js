@@ -16,7 +16,7 @@ const CopyButton = ({ roomId }) => {
 
   return (
     <button
-      className='px-4 py-2 bg-white border border-gray-500 text-black rounded-full hover:bg-blue hover:text-white hover:border-transparent'
+      className='px-4 py-2 bg-blue border border-gray-500 text-white rounded-full hover:bg-purple hover:text-white hover:border-transparent'
       onClick={copyRoomId}
     >
       Copy Room Id
